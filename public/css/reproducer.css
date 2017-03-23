@@ -1,0 +1,90 @@
+
+*{box-sizing: border-box;}
+body{
+	margin: 0;
+	padding: 0;
+}
+header{
+	box-sizing: content-box;
+	position: fixed;
+	padding: 10px;
+	font-size: 20px;
+	height: 24px;
+	top: 0;
+	background-color: black;
+	color: white;
+	width: 100%;
+}
+main{
+	display: flex;
+	width: 100%;
+	text-align: center;
+	height: 90vh;
+	margin-bottom: 28px;
+	margin-top: 30px;
+	}
+@media(max-width: 300px){
+	main{
+		flex-direction: column;
+	}
+	main section{
+		width: 100%!important;
+	}
+	main section#artist{display: none;}
+	main section#list{border-top: 5px solid black}
+}
+main section{
+	padding: 1em;
+}
+main section#search{
+	width: 25%;
+	background-color:#00FFB8;
+	overflow-y:scroll;
+}
+main section#search #searchBox{
+	margin-bottom: 1em;
+}
+#search div{
+	transition-duration: .4s;
+}
+#search div:hover{
+	font-weight: bolder;
+	cursor: pointer;
+	background-color: black;
+	color: white;
+	border-radius: .5em
+}
+main section#list{
+	width:50%;
+	overflow-y:scroll;
+	text-align: justify;
+}
+#list div:hover{
+	cursor: pointer;
+	font-weight: bolder;
+	background-color: black;
+	color: white;
+	border-radius: .5em
+}
+#list div{
+	padding: .2em;
+	margin: .3em;
+	border:1px solid #00FFB8;
+	border-radius: .3em;
+	transition-duration:.5s;
+}
+main section#artist{width: 25%;}
+
+#artist img,#search input{width: 80%;margin: auto;}
+
+footer{
+	width: 100%;
+	position: fixed;
+	top: 100%;
+}
+#audio{
+	transform: translateY(-100%);
+	background-color: black;
+	width: 100%;
+	height: 30px;
+}

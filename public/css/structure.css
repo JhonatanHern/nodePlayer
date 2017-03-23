@@ -1,0 +1,9 @@
+body{margin: 0;box-sizing: border-box;}
+article{
+	margin:auto;
+	width: 80%;
+	padding: 2em;
+	border-radius: 1em;
+	background-color: #5f5;
+	margin-top: 1em;
+}
