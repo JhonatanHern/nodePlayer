@@ -6,10 +6,13 @@ $(document).ready(function(){
 		img = document.getElementById('artImg'),
 		trackSource = document.getElementById('trackReproducer'),
 		audio = document.getElementById('audio'),
-		currentArtist;
+		currentArtist,
+		currentSong,
+		header = document.querySelector('header');
 
 	var updateSongListener = function(){
 		$('.song').click(function(){
+			header.innerHTML = "<span style='font-weight:bolder'>"+this.innerHTML+"</span> - "+currentArtist.split("__").join(" ");
 			var songName = this.innerHTML.split(" ").join("__").split("&amp;").join("CODEAND");
 			trackSource.src = "ajax/song?name="+songName+"&artist="+currentArtist+"&album="+this.id.split(" ").join("__");
 			audio.load();
@@ -32,9 +35,18 @@ $(document).ready(function(){
 		});
 	};
 	var artistLoadHandler = function(result){
+		result = JSON.parse(result);
 		if (JSON.stringify(result)==="{}") {
-			alert("error");
+			console.log("error");
 			return;
+		}
+		if(result.wait){
+			console.log("waiting");
+			$.get("ajax/artists",artistLoadHandler);
+			return;
+		}
+		if (!result.artists) {
+			location.reload();
 		}
 		result.artists.forEach(function(value,index,array) {
 			var art = value.split("__").join(" ");
@@ -46,5 +58,6 @@ $(document).ready(function(){
 			artistClick(this.id);
 		});
 	}
-	$.getJSON("ajax/artists",artistLoadHandler);
+	console.log("get");
+	$.get("ajax/artists",artistLoadHandler);
 });

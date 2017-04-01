@@ -1,34 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Reproductor</title>
+	<title>nodePlayer | JhonatanHern</title>
 	<link rel="stylesheet" type="text/css" href="css/reproducer.css">
-	<script type="text/javascript" src="scripts/jquery.js"></script>
-	<script type="text/javascript" src="scripts/frontEnd.js"></script>
 	<meta charset="utf-8">
 </head>
 <body>
 		<header>
-			Texto de ejemplo
+			Pick a song
 		</header>
 		<main>
 			<section id = "search">
 				<input type="text" id="searchBox">
 			</section>
 			<section id = "list">
-				Selecciona un artista
+				Pick an artist
 			</section>
-			<section id = "artist">
-				<img src="slipknot/ex.jpg" id="artImg">
+			<!--section id = "artist">
+				<img id="artImg">
 				<article id="description">
 					Artist description
 				</article>
-			</section>
+			</section-->
 		</main>
 		<footer>
 			<audio controls id="audio">
-				<source id="trackReproducer" src="ajax/song" type="audio/mp3">
+				<source id="trackReproducer" type="audio/mp3">
 			</audio>
 		</footer>
+	<script type="text/javascript" src="scripts/jquery.js"></script>
+	<script type="text/javascript" src="scripts/frontEnd.js"></script>
 </body>
 </html>

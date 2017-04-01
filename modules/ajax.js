@@ -1,14 +1,38 @@
-var way = "/home/main/Music";
+var way = null,open=false,loading=false;
 
 var fileSystem = require('fs'),
 	express = require('express');
-
+var loader = function(){
+	fileSystem.readFile("./config/config.npl",function(err,info){
+		if (err) {
+			console.log("The configuration is not enabled");
+			return;
+		}
+		way = String(info);
+		open = true;
+	});
+}
+loader();
 var router = express.Router();
 
 router.use(function(req, res, next){next();});
 
 router.get('/artists',function(req,res){
+	if (!open) {
+		console.log("not open");
+		if(!loading){
+			loader();
+		}
+		loading=true;
+		res.send('{"wait":true}');
+		return;
+	}
+	loading=false;
 	fileSystem.readdir(way,function(err,fileArray){
+		if (err) {
+			console.log("fatal error at artists");
+			return;
+		}
 		fileArray.forEach(function(elem,index,array){
 			array[index]=elem.split(" ").join("__");
 		});
@@ -39,7 +63,10 @@ router.get('/albums',function(req,res){
 		dirArray.forEach(function(value,index,array){
 			responseObject[value] = "";
 			var fileArray = fileSystem.readdirSync(readDir+'/'+value);
-			if(fileArray===null){console.log("error on "+readDir+'/'+value);return;}
+			if(fileArray===null){
+				console.log("error on "+readDir+'/'+value);
+				return;
+			}
 			var array = fileArray.filter(function(elem){
 				return elem.indexOf('.mp3')!==-1;
 			});
@@ -57,12 +84,9 @@ router.get('/song', function (req, res) {
 		res.end();
 		return;
 	}
-	console.log(req.query.artist);
-	console.log(req.query.name);
-	console.log(req.query.album);
-	var artist = req.query.artist.split("__").join(" ").split("CODEAND").join("&");
-	var name = req.query.name.split("__").join(" ").split("CODEAND").join("&");
-	var album = req.query.album.split("__").join(" ");
+	var artist = req.query.artist.split("__").join(" ").split("CODEAND").join("&").split("/").join("");
+	var name   =   req.query.name.split("__").join(" ").split("CODEAND").join("&").split("/").join("");
+	var album  =  req.query.album.split("__").join(" ").split("CODEAND").join("&").split("/").join("");
 	var filePath;
 	if (album==="singles") {
 		filePath = way+'/'+artist+'/'+name+'.mp3';

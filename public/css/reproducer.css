@@ -1,8 +1,9 @@
-
 *{box-sizing: border-box;}
 body{
 	margin: 0;
 	padding: 0;
+	overflow-x: hidden;
+	background-color: black;
 }
 header{
 	box-sizing: content-box;
@@ -13,27 +14,54 @@ header{
 	top: 0;
 	background-color: black;
 	color: white;
-	width: 100%;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	animation-name: looper;
+	animation-duration: 7s;
+	animation-iteration-count: infinite;
+	animation-delay: 1s;
+	animation-timing-function: linear;
+	-webkit-animation-name: looper;
+	-webkit-animation-duration: 7s;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-delay: 1s;
+	-webkit-animation-timing-function: linear;
+}
+@-moz-keyframes looper{
+	15%{-moz-transform:translateX(0%);}
+	100%{-moz-transform:translateX(-100%);}
+}
+@-webkit-keyframes looper{
+	15%{-webkit-transform:translateX(0%);}
+	100%{-webkit-transform:translateX(-100%);}
+}
+@keyframes looper{
+	15%{transform:translateX(0%);}
+	100%{transform:translateX(-100%);}
 }
 main{
+	background-color: black;
 	display: flex;
 	width: 100%;
 	text-align: center;
-	height: 90vh;
-	margin-bottom: 28px;
-	margin-top: 30px;
+	height: 100vh;
+	padding-bottom: 28px;
+	padding-top: 44px;
 	}
-@media(max-width: 300px){
+@media(max-width: 600px){
 	main{
 		flex-direction: column;
 	}
 	main section{
 		width: 100%!important;
+		height: 50%!important;
 	}
 	main section#artist{display: none;}
 	main section#list{border-top: 5px solid black}
 }
 main section{
+	background-color: white;
 	padding: 1em;
 }
 main section#search{
@@ -55,7 +83,8 @@ main section#search #searchBox{
 	border-radius: .5em
 }
 main section#list{
-	width:50%;
+	/*width:50%;*/
+	width: 75%;
 	overflow-y:scroll;
 	text-align: justify;
 }
@@ -73,7 +102,7 @@ main section#list{
 	border-radius: .3em;
 	transition-duration:.5s;
 }
-main section#artist{width: 25%;}
+/*main section#artist{width: 25%;}*/
 
 #artist img,#search input{width: 80%;margin: auto;}
 
