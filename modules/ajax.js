@@ -1,105 +1,102 @@
-var way = null,open=false,loading=false;
+var way = null,open=false,loading=false
 
 var fileSystem = require('fs'),
-	express = require('express');
+	express = require('express')
 var loader = function(){
 	fileSystem.readFile("./config/config.npl",function(err,info){
 		if (err) {
-			console.log("The configuration is not enabled");
-			return;
+			console.log("The configuration is not enabled")
+			return
 		}
-		way = String(info);
-		open = true;
-	});
+		way = String(info)
+		open = true
+	})
 }
-loader();
-var router = express.Router();
+loader()
+var router = express.Router()
 
-router.use(function(req, res, next){next();});
+router.use(function(req, res, next){next()})
 
 router.get('/artists',function(req,res){
 	if (!open) {
-		console.log("not open");
+		console.log("not open")
 		if(!loading){
-			loader();
+			loader()
 		}
-		loading=true;
-		res.send('{"wait":true}');
-		return;
+		loading=true
+		res.send('{"wait":true}')
+		return
 	}
-	loading=false;
+	loading=false
 	fileSystem.readdir(way,function(err,fileArray){
 		if (err) {
-			console.log("fatal error at artists");
-			return;
+			console.log("fatal error at artists")
+			return
 		}
-		fileArray.forEach(function(elem,index,array){
-			array[index]=elem.split(" ").join("__");
-		});
 		res.send(JSON.stringify({
 			artists:fileArray.filter(function(inp){
-				return inp.indexOf(".")===-1;
+				return inp.indexOf(".")===-1
 			})
-		}));
-	});
-});
+		}))
+	})
+})
 router.get('/albums',function(req,res){
-	var art = req.query.art.split('__').join(" ").split("'").join("\'"),
-		readDir = way+"/"+art;
+	var art = req.query.art,
+		readDir = way+"/"+art
 
 	fileSystem.readdir(readDir,function(err,dirArray){
 		if(err){
-			console.log("error reading "+readDir);
-			res.send("{}");
-			return;
+			console.log("error reading "+readDir)
+			res.send("{}")
+			return
 		}
 		singlesArray = dirArray.filter(function(elem){
-			return elem.indexOf('.mp3')!==-1;//get the singles in the folder
-		});
+			return elem.indexOf('.mp3')!==-1//get the singles in the folder
+		})
 		dirArray = dirArray.filter(function(elem){
-			return elem.indexOf('.')===-1;//para dejar solo a las carpetas
-		});
-		var responseObject = {};//objeto a retornar
+			return elem.indexOf('.')===-1//para dejar solo a las carpetas
+		})
+		var responseObject = {}//objeto a retornar
 		dirArray.forEach(function(value,index,array){
-			responseObject[value] = "";
-			var fileArray = fileSystem.readdirSync(readDir+'/'+value);
+			responseObject[value] = ""
+			var fileArray = fileSystem.readdirSync(readDir+'/'+value)
 			if(fileArray===null){
-				console.log("error on "+readDir+'/'+value);
-				return;
+				console.log("error on "+readDir+'/'+value)
+				return
 			}
 			var array = fileArray.filter(function(elem){
-				return elem.indexOf('.mp3')!==-1;
-			});
-			responseObject[value] = array;//the values are asigned
-		});
+				return elem.indexOf('.mp3')!==-1
+			})
+			responseObject[value] = array//the values are asigned
+		})
 		if(singlesArray.length>0){
-			responseObject["singles"] = singlesArray;
+			responseObject["singles"] = singlesArray
 		}
-		res.send(JSON.stringify(responseObject));
-	});
-});
+		res.send(JSON.stringify(responseObject))
+	})
+})
 router.get('/song', function (req, res) {
 	if (req.query.artist===undefined||req.query.name===undefined||req.query.album===undefined) {
-		res.writeHead(404,{'Content-Type':'audio/mpeg'});
-		res.end();
-		return;
+		res.writeHead(404,{'Content-Type':'audio/mpeg'})
+		res.end()
+		return
 	}
-	var artist = req.query.artist.split("__").join(" ").split("CODEAND").join("&").split("/").join("");
-	var name   =   req.query.name.split("__").join(" ").split("CODEAND").join("&").split("/").join("");
-	var album  =  req.query.album.split("__").join(" ").split("CODEAND").join("&").split("/").join("");
-	var filePath;
+	var artist = req.query.artist
+	var name   =   req.query.name
+	var album  =  req.query.album
+	var filePath
 	if (album==="singles") {
-		filePath = way+'/'+artist+'/'+name+'.mp3';
+		filePath = way+'/'+artist+'/'+name+'.mp3'
 	} else {
-		filePath = way+'/'+artist+'/'+album+'/'+name+'.mp3';
+		filePath = way+'/'+artist+'/'+album+'/'+name+'.mp3'
 	}
-	var stat = fileSystem.statSync(filePath);
+	var stat = fileSystem.statSync(filePath)
 	res.writeHead(200,{
 						'Content-Type': 'audio/mpeg',
 						'Content-Length': stat.size
-					});
-	var readStream = fileSystem.createReadStream(filePath);
-	readStream.pipe(res);
-});
+					})
+	var readStream = fileSystem.createReadStream(filePath)
+	readStream.pipe(res)
+})
 
-module.exports = router;
+module.exports = router

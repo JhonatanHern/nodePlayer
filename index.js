@@ -25,8 +25,33 @@ fs.readFile("./config/config.npl",function(err,info){
 });
 
 app.get("/",function(req,res){
-	if(open){
-		res.send('<!DOCTYPE html><html><head><title>nodePlayer | JhonatanHern</title><link rel="stylesheet" type="text/css" href="css/reproducer.css"><meta charset="utf-8"></head><body><header>Pick a song</header><main><section id = "search"><input type="text" id="searchBox"></section><section id = "list">Pick an artist</section><!--section id = "artist"><img id="artImg"><article id="description">Artist description</article></section--></main><footer><audio controls id="audio"><source id="trackReproducer" type="audio/mp3"></audio></footer><script type="text/javascript" src="scripts/jquery.js"></script><script type="text/javascript" src="scripts/frontEnd.js"></script></body></html>');
+	if(open) {
+		res.send(`
+			<!DOCTYPE html>
+			<html>
+				<head>
+					<title>nodePlayer | JhonatanHern</title>
+					<link rel="stylesheet" type="text/css" href="css/reproducer.css">
+					<meta charset="utf-8">
+				</head>
+				<body>
+					<span id="randomizer" >Random </span>
+					<header>Pick a song</header>
+					<main>
+						<section id = "search">
+							<input type="text" id="searchBox">
+						</section>
+						<section id = "list">Pick an artist</section>
+					</main>
+					<footer>
+						<audio controls id="audio">
+							<source id="trackReproducer" type="audio/mp3">
+						</audio>
+					</footer>
+					<script type="text/javascript" src="scripts/jquery.js"></script>
+					<script type="text/javascript" src="scripts/frontEnd.js"></script>
+				</body>
+			</html>`);
 		return;
 	}
 	res.send('<!DOCTYPE html><html><head><title>nodePlayer | JhonatanHern</title><link rel="stylesheet" type="text/css" href="css/form.css"></head><body><form method="POST">Please, insert the directory<br><br><input type="text" name="directory" required><br><br><input type="submit"></form></body></html>');
