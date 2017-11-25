@@ -51,10 +51,19 @@ router.get('/albums',function(req,res){
 			return
 		}
 		singlesArray = dirArray.filter(function(elem){
-			return elem.indexOf('.mp3')!==-1//get the singles in the folder
+			return elem.indexOf('.mp3')===elem.length-4//get the singles in the folder
 		})
+		let extensionMatcher = /\.[a-z|0-9][a-z|0-9]?[a-z|0-9]?/gi
 		dirArray = dirArray.filter(function(elem){
-			return elem.indexOf('.')===-1//para dejar solo a las carpetas
+			let matches = elem.match(extensionMatcher)
+			if (!matches) {
+				return true
+			}
+			if (elem[0]==='.') {
+				return false
+			}
+			let test = matches[matches.length-1]
+			return  elem.lastIndexOf(test)!==elem.length-test.length//para dejar solo a las carpetas
 		})
 		var responseObject = {}//objeto a retornar
 		dirArray.forEach(function(value,index,array){
