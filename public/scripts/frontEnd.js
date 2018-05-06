@@ -9,6 +9,7 @@ $(document).ready(function(){
 		currentArtist,
 		artistsList,
 		currentSong,
+		currentSongList = [] ,
 		header = document.querySelector('header');
 
 	var updateSongListener = function(){
@@ -34,7 +35,8 @@ $(document).ready(function(){
 				center.append(albumArticle);
 				currentArtist = id;
 			}
-			updateSongListener();
+			updateSongListener()
+			currentSongList = songs
 			if (callback) {
 				callback(songs)
 			}
@@ -48,43 +50,59 @@ $(document).ready(function(){
 			return;
 		}
 		if(result.wait){
-			console.log("waiting");
-			$.get("ajax/artists",artistLoadHandler);
-			return;
+			console.log("waiting")
+			$.get("ajax/artists",artistLoadHandler)
+			return
 		}
 		if (!result.artists) {
-			location.reload();
+			location.reload()
 		}
 		result.artists.forEach(function(value,index,array) {
-			var art = value;
-			var div = $("<div id=\""+value+"\">"+art+"</div>");
-			div.addClass('artistTrigger');
-			search.append(div);
-		});
+			var art = value
+			var div = $("<div id=\""+value+"\">"+art+"</div>")
+			div.addClass('artistTrigger')
+			search.append(div)
+		})
 		$('.artistTrigger').click(function(){
-			artistClick(this.id);
-		});
+			artistClick(this.id)
+		})
 	}
 	console.log("get");
 	$.get("ajax/artists",artistLoadHandler);
 	$('#randomizer').click(function(){
 		this.classList.toggle('active')
 		if (this.className === 'active') {
+			$('#random-inside-artist').css('display','block')
 			audio.onended = function(argument) {
-				artistClick(
-					artistsList[ Math.floor( artistsList.length * Math.random() ) ],
-					function (songs) {
-						let song = songs[ Math.floor( songs.length * Math.random() ) ]
-
-						header.innerHTML = "<span style='font-weight:bolder'>"+song.song+"</span> - "+currentArtist;
-						var songName = encodeURIComponent(song.song);
-						trackSource.src = "ajax/song?name="+songName.substr(0,songName.length-4)+"&artist="+currentArtist+"&album="+encodeURIComponent(song.album)
-						audio.load();
-						audio.play();
-					})
+				if($('#random-inside-artist')[0].classList.contains('active')){
+					artistClick(
+						artistsList[ Math.floor( artistsList.length * Math.random() ) ],
+						function (songs) {
+							let song = songs[ Math.floor( songs.length * Math.random() ) ]
+							header.innerHTML = "<span style='font-weight:bolder'>"+song.song+"</span> - "+currentArtist
+							var songName = encodeURIComponent(song.song)
+							trackSource.src = "ajax/song?name="+songName.substr(0,songName.length-4)+"&artist="+currentArtist+"&album="+encodeURIComponent(song.album)
+							audio.load()
+							audio.play()
+						})
+				}else{
+					let song = currentSongList[ Math.floor( currentSongList.length * Math.random() ) ]
+					header.innerHTML = "<span style='font-weight:bolder'>"+song.song+"</span> - "+currentArtist
+					var songName = encodeURIComponent(song.song)
+					trackSource.src = "ajax/song?name="+songName.substr(0,songName.length-4)+"&artist="+currentArtist+"&album="+encodeURIComponent(song.album)
+					audio.load()
+					audio.play()
+				}
 			}
 		} else {
+			$('#random-inside-artist').css('display','none')
 			audio.onended = null
  		}
 	})
-});
+	$('#random-inside-artist').click(function(argument) {
+		this.classList.toggle('active')
+	})
+	$('#menu').click(function() {
+		$('#buttons')[0].classList.toggle('open')
+	})
+})

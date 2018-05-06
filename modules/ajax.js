@@ -91,7 +91,7 @@ router.get('/song', function (req, res) {
 		return
 	}
 	var artist = req.query.artist
-	var name   =   req.query.name
+	var name   =   req.query.name.indexOf('&amp;')===-1?req.query.name:req.query.name.split('&amp;').join('&')
 	var album  =  req.query.album
 	var filePath
 	if (album==="singles") {

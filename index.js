@@ -1,6 +1,6 @@
-var way = null,
-	appRoute = process.cwd()+"/",
-	port=80;
+var way = null;
+
+const PORT = 81;
 
 var express = require("express"),
 	body_parser = require("body-parser"),
@@ -35,11 +35,17 @@ app.get("/",function(req,res){
 					<meta charset="utf-8">
 				</head>
 				<body>
-					<span id="randomizer" >Random </span>
+					<div id="menu">
+						Menu
+					</div>
+					<div id="buttons">
+						<span id="randomizer" >Random </span>
+						<span id="random-inside-artist">Songs of any artist</span>
+					</div>
 					<header>Pick a song</header>
 					<main>
 						<section id = "search">
-							<input type="text" id="searchBox">
+							<!--input type="text" id="searchBox"-->
 						</section>
 						<section id = "list">Pick an artist</section>
 					</main>
@@ -71,6 +77,6 @@ app.post("/",function(req,res){
 	});
 });
 
-app.listen(port,function(){
+app.listen(PORT,function(){
 	console.log("server active");
 });
