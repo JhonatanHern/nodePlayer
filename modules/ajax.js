@@ -1,7 +1,11 @@
-var way = null,open=false,loading=false
+var way = null,
+	open = false,
+	loading = false
 
 var fileSystem = require('fs'),
 	express = require('express')
+
+
 var loader = function(){
 	fileSystem.readFile("./config/config.npl",function(err,info){
 		if (err) {
@@ -47,23 +51,15 @@ router.get('/albums',function(req,res){
 	fileSystem.readdir(readDir,function(err,dirArray){
 		if(err){
 			console.log("error reading "+readDir)
-			res.send("{}")
+			res.send("[]")
 			return
 		}
 		singlesArray = dirArray.filter(function(elem){
-			return elem.indexOf('.mp3')===elem.length-4//get the singles in the folder
+			return /\.mp3$/.test(elem)//get the singles in the folder
 		})
-		let extensionMatcher = /\.[a-z|0-9][a-z|0-9]?[a-z|0-9]?/gi
-		dirArray = dirArray.filter(function(elem){
-			let matches = elem.match(extensionMatcher)
-			if (!matches) {
-				return true
-			}
-			if (elem[0]==='.') {
-				return false
-			}
-			let test = matches[matches.length-1]
-			return  elem.lastIndexOf(test)!==elem.length-test.length//para dejar solo a las carpetas
+		const regexp = /\.\w{2,4}$/
+		dirArray = dirArray.filter((elem)=>{
+			return !regexp.test(elem) && elem[0]!=='.'
 		})
 		var responseObject = {}//objeto a retornar
 		dirArray.forEach(function(value,index,array){
@@ -74,7 +70,7 @@ router.get('/albums',function(req,res){
 				return
 			}
 			var array = fileArray.filter(function(elem){
-				return elem.indexOf('.mp3')!==-1
+				return /\.mp3$/.test(elem)
 			})
 			responseObject[value] = array//the values are asigned
 		})
@@ -91,8 +87,8 @@ router.get('/song', function (req, res) {
 		return
 	}
 	var artist = req.query.artist
-	var name   =   req.query.name.indexOf('&amp;')===-1?req.query.name:req.query.name.split('&amp;').join('&')
-	var album  =  req.query.album
+	var album  = req.query.album
+	var name   = req.query.name.indexOf('&amp;')===-1?req.query.name:req.query.name.split('&amp;').join('&')
 	var filePath
 	if (album==="singles") {
 		filePath = way+'/'+artist+'/'+name+'.mp3'

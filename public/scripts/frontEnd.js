@@ -1,6 +1,6 @@
 'use strict';
 
-$(document).ready(function(){
+document.addEventListener('DOMContentLoaded',function(){
 	var center = $('#list'),
 		search = $('#search'),
 		img = document.getElementById('artImg'),
@@ -104,5 +104,11 @@ $(document).ready(function(){
 	})
 	$('#menu').click(function() {
 		$('#buttons')[0].classList.toggle('open')
+	})
+	$('#alarm').click(function() {
+		let hours = Number(prompt('How many hours do you want before playing the song?'))
+		setTimeout(function() {
+			$('audio')[0].play()
+		} , hours * 1000 * 60 * 60)
 	})
 })

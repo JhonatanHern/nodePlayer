@@ -151,6 +151,11 @@ footer{
 #buttons.open{
 	transform: none;
 }
+@media(max-width: 600px){
+	#buttons{
+		width: 100%;
+	}
+}
 #buttons span{
 	font-size: 1.3em;
 	color:#71bbfc;

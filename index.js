@@ -41,6 +41,7 @@ app.get("/",function(req,res){
 					<div id="buttons">
 						<span id="randomizer" >Random </span>
 						<span id="random-inside-artist">Songs of any artist</span>
+						<span id="alarm">set alarm</span>
 					</div>
 					<header>Pick a song</header>
 					<main>
