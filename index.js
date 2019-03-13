@@ -1,6 +1,6 @@
 var way = null;
 
-const PORT = 81;
+const PORT = 8080;
 
 var express = require("express"),
 	body_parser = require("body-parser"),
@@ -26,39 +26,7 @@ fs.readFile("./config/config.npl",function(err,info){
 
 app.get("/",function(req,res){
 	if(open) {
-		res.send(`
-			<!DOCTYPE html>
-			<html>
-				<head>
-					<title>nodePlayer | JhonatanHern</title>
-					<link rel="stylesheet" type="text/css" href="css/reproducer.css">
-					<meta charset="utf-8">
-				</head>
-				<body>
-					<div id="menu">
-						Menu
-					</div>
-					<div id="buttons">
-						<span id="randomizer" >Random </span>
-						<span id="random-inside-artist">Songs of any artist</span>
-						<span id="alarm">set alarm</span>
-					</div>
-					<header>Pick a song</header>
-					<main>
-						<section id = "search">
-							<!--input type="text" id="searchBox"-->
-						</section>
-						<section id = "list">Pick an artist</section>
-					</main>
-					<footer>
-						<audio controls id="audio">
-							<source id="trackReproducer" type="audio/mp3">
-						</audio>
-					</footer>
-					<script type="text/javascript" src="scripts/jquery.js"></script>
-					<script type="text/javascript" src="scripts/frontEnd.js"></script>
-				</body>
-			</html>`);
+		res.sendFile( __dirname + '/public/app.html');
 		return;
 	}
 	res.send('<!DOCTYPE html><html><head><title>nodePlayer | JhonatanHern</title><link rel="stylesheet" type="text/css" href="css/form.css"></head><body><form method="POST">Please, insert the directory<br><br><input type="text" name="directory" required><br><br><input type="submit"></form></body></html>');

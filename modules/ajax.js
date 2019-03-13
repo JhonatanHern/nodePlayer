@@ -57,14 +57,18 @@ router.get('/albums',function(req,res){
 		singlesArray = dirArray.filter(function(elem){
 			return /\.mp3$/.test(elem)//get the singles in the folder
 		})
-		const regexp = /\.\w{2,4}$/
+		const regexp = /\.\w{1,4}$/
 		dirArray = dirArray.filter((elem)=>{
 			return !regexp.test(elem) && elem[0]!=='.'
 		})
 		var responseObject = {}//objeto a retornar
 		dirArray.forEach(function(value,index,array){
 			responseObject[value] = ""
-			var fileArray = fileSystem.readdirSync(readDir+'/'+value)
+			try{
+				var fileArray = fileSystem.readdirSync(readDir+'/'+value)
+			}catch(e){
+				// console.log('OOF')
+			}
 			if(fileArray===null){
 				console.log("error on "+readDir+'/'+value)
 				return
