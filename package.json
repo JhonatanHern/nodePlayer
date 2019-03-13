@@ -1,0 +1,29 @@
+{
+  "name": "nodeplayer",
+  "version": "1.1.7",
+  "description": "trashy mp3 player",
+  "main": "index.js",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.16.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JhonatanHern/nodePlayer.git"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "jQuery"
+  ],
+  "author": "JhonatanHern",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JhonatanHern/nodePlayer/issues"
+  },
+  "homepage": "https://github.com/JhonatanHern/nodePlayer#readme"
+}

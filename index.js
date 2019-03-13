@@ -3,7 +3,7 @@ var way = null;
 const PORT = 8080;
 
 var express = require("express"),
-	body_parser = require("body-parser"),
+//	body_parser = require("body-parser"),
 	fs = require("fs"),
 	ajax = require('./modules/ajax');
 
@@ -11,7 +11,7 @@ var app = express();
 
 app.use(express.static('./public'));
 app.use('/ajax', ajax);
-app.use(body_parser.urlencoded({extended:true}));
+//app.use(body_parser.urlencoded({extended:true}));
 
 var open = false;
 
