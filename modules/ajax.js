@@ -2,9 +2,12 @@ var way = null,
 	open = false,
 	loading = false
 
-var fileSystem = require('fs'),
+const fileSystem = require('fs'),
+	{ promisify } = require('util'),
 	express = require('express')
 
+const fs = fileSystem
+const asyncStat = promisify(fs.stat)
 
 var loader = function(){
 	fileSystem.readFile("./config/config.npl",function(err,info){
@@ -84,28 +87,49 @@ router.get('/albums',function(req,res){
 		res.send(JSON.stringify(responseObject))
 	})
 })
-router.get('/song', function (req, res) {
+
+router.get('/song', async function(req, res) {
 	if (req.query.artist===undefined||req.query.name===undefined||req.query.album===undefined) {
 		res.writeHead(404,{'Content-Type':'audio/mpeg'})
 		res.end()
 		return
 	}
-	var artist = req.query.artist
-	var album  = req.query.album
-	var name   = req.query.name.indexOf('&amp;')===-1?req.query.name:req.query.name.split('&amp;').join('&')
-	var filePath
+	const artist = req.query.artist,
+		album  = req.query.album,
+		name   = req.query.name
+	let path
 	if (album==="singles") {
-		filePath = way+'/'+artist+'/'+name+'.mp3'
+		path = way+'/'+artist+'/'+name+'.mp3'
 	} else {
-		filePath = way+'/'+artist+'/'+album+'/'+name+'.mp3'
+		path = way+'/'+artist+'/'+album+'/'+name+'.mp3'
 	}
-	var stat = fileSystem.statSync(filePath)
-	res.writeHead(200,{
-						'Content-Type': 'audio/mpeg',
-						'Content-Length': stat.size
-					})
-	var readStream = fileSystem.createReadStream(filePath)
-	readStream.pipe(res)
-})
+	const stat = await asyncStat(path)
+	const fileSize = stat.size
+	const range = req.headers.range
+	if (range) {
+		const parts = range.replace(/bytes=/, "").split("-")
+		const start = parseInt(parts[0], 10)
+		const end = parts[1] 
+			? parseInt(parts[1], 10)
+			: fileSize-1
+		const chunksize = (end-start)+1
+		const file = fs.createReadStream(path, {start, end})
+		const head = {
+			'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+			'Accept-Ranges': 'bytes',
+			'Content-Length': chunksize,
+			'Content-Type': 'audio/mpeg',
+		}
+		res.writeHead(206, head);
+		file.pipe(res);
+	} else {
+		const head = {
+			'Content-Length': fileSize,
+			'Content-Type': 'audio/mpeg',
+		}
+		res.writeHead(200, head)
+		fs.createReadStream(path).pipe(res)
+	}
+});
 
 module.exports = router

@@ -26,7 +26,7 @@ var artistClick = function(id,callback){
 			var albumArticle = $('<article>');
 			albumArticle.append("<h3>"+album+"</h3>");
 			result[album].forEach(function(element,index,array){
-				albumArticle.append("<div id='"+album+"'' class='song' >"+element.replace(".mp3","")+"</div>");
+				albumArticle.append("<div id=\""+album+"\" class='song' >"+element.replace(".mp3","")+"</div>");
 				songs.push({song:element,album:album})
 			});
 			center.append(albumArticle);
@@ -107,6 +107,8 @@ $('#menu').click(function() {
 $('#alarm').click(function() {
 	var hours = Number(prompt('How many hours do you want before playing the song?'))
 	setTimeout(function() {
-		$('audio')[0].play()
+		var audio = $('audio')[0]
+		audio.play()
+		audio.volume = 1
 	} , hours * 1000 * 60 * 60)
 })
