@@ -1,4 +1,4 @@
-var way = null,
+let way = null,
 	open = false,
 	loading = false
 
@@ -9,7 +9,7 @@ const fileSystem = require('fs'),
 const fs = fileSystem
 const asyncStat = promisify(fs.stat)
 
-var loader = function(){
+let loader = ()=>{
 	fileSystem.readFile("./config/config.npl",function(err,info){
 		if (err) {
 			console.log("The configuration is not enabled")
