@@ -12,8 +12,8 @@ var center = $('#list'),
 var updateSongListener = function(){
 	$('.song').click(function(){
 		header.innerHTML = "<span style='font-weight:bolder'>"+this.innerHTML+"</span> - "+currentArtist.split("__").join(" ");
-		var songName = encodeURIComponent(this.innerHTML);
-		trackSource.src = "ajax/song?name="+songName+"&artist="+currentArtist+"&album="+encodeURIComponent(this.id);
+		var songName = encodeURIComponent(this.getAttribute('songName'));
+		trackSource.src = "ajax/song?name="+songName+"&artist="+currentArtist+"&album="+encodeURIComponent(this.getAttribute('album'));
 		audio.load();
 		audio.play();
 	});
@@ -26,7 +26,12 @@ var artistClick = function(id,callback){
 			var albumArticle = $('<article>');
 			albumArticle.append("<h3>"+album+"</h3>");
 			result[album].forEach(function(element,index,array){
-				albumArticle.append("<div id=\""+album+"\" class='song' >"+element.replace(".mp3","")+"</div>");
+				var div = document.createElement('div')
+				div.classList.add('song')
+				div.innerText = element.replace(/\.mp3$/,"")
+				div.setAttribute('songName',element.replace(/\.mp3$/,""))
+				div.setAttribute('album',album)
+				albumArticle[0].appendChild(div)
 				songs.push({song:element,album:album})
 			});
 			center.append(albumArticle);
@@ -58,10 +63,10 @@ var artistLoadHandler = function(result){
 		return a.toLowerCase() > b.toLowerCase()
 	})
 	result.artists.forEach(function(value,index,array) {
-		var art = value
-		var div = $("<div id=\""+value+"\">"+art+"</div>")
-		div.addClass('artistTrigger')
-		search.append(div)
+		var div = document.createElement('div')
+		div.id = div.innerText = value
+		div.classList.add('artistTrigger')
+		search[0].appendChild(div)
 	})
 	$('.artistTrigger').click(function(){
 		artistClick(this.id)

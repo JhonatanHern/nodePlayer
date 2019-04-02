@@ -72,11 +72,11 @@ router.get('/albums',function(req,res){
 			}catch(e){
 				// console.log('OOF')
 			}
-			if(fileArray===null){
+			if(!fileArray){
 				console.log("error on "+readDir+'/'+value)
 				return
 			}
-			var array = ([]||fileArray).filter(function(elem){
+			var array = (fileArray||[]).filter(function(elem){
 				return /\.mp3$/.test(elem)
 			})
 			responseObject[value] = array//the values are asigned
